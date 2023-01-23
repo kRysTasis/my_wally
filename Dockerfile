@@ -19,3 +19,6 @@ RUN python3 -m pip install --upgrade pip \
     flask
 
 COPY . .
+
+RUN export FLASK_APP=main.py
+CMD flask run -h 0.0.0.0 -p 10000
