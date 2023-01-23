@@ -16,7 +16,8 @@ RUN apt-get clean
 
 RUN python3 -m pip install --upgrade pip \
 &&  pip install --no-cache-dir \
-    flask
+    flask \
+    requests
 
 COPY . .
 
