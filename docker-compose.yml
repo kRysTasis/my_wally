@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-wally
+    image: my-wally
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/usr/my_wally
