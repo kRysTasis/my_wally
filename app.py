@@ -17,7 +17,11 @@ reply_url = 'https://api.line.me/v2/bot/message/reply'
 
 app = Flask(__name__)
 
-@app.route('/callback', method='POST')
+@app.route('/')
+def index():
+    return "index"
+
+@app.route('/callback', methods=['POST'])
 def callback():
     body = request.body
     text_body = body.read().decode('UTF-8')
@@ -45,3 +49,6 @@ def callback():
     print(request.body)
 
     return {'statusCode': 200, 'body': '{}'}
+
+if __name__ == '__main__':
+    app.run()
