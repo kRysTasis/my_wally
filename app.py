@@ -145,7 +145,7 @@ def callback():
                 if target == None:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
-                    db.session.add(t)
+                    db.session.add(target)
                 else:
                     print('既にターゲットが存在するので更新')
                     target.msg_id = msg_id
