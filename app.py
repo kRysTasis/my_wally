@@ -9,6 +9,9 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
 )
+from src.handle_message import (
+    HandleMessageService
+)
 
 import os
 
@@ -33,11 +36,16 @@ def index():
 @app.route('/callback', methods=['POST'])
 def callback():
 
+    
+
     signature = request.headers['X-Line-Signature']
 
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
     
+    print('callback', request)
+    print('request', body)
+
     # handle webhook body
     try:
         handler.handle(body, signature)
@@ -49,29 +57,14 @@ def callback():
 # handle message from LINE
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print('handle_message')
-    print(event)
+    print('handle_message', event)
 
-    msg_id = event.message.id
-    print('msg_id', msg_id)
-    
-    
-    # line_bot_api.reply_message(
-    #     event.reply_token,
-    #     TextSendMessage(text='test message')
-    # )
-
-    image_message = ImageSendMessage(
-        original_content_url='https://example.com/original.jpg',
-        preview_image_url='https://example.com/preview.jpg'
-    )
+    reply = HandleMessageService.get_replay(event)
 
     line_bot_api.reply_message(
         event.reply_token,
-        image_message,
+        reply,
     )
-    
-    
 
 
 if __name__ == "__main__":
