@@ -51,6 +51,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app, db)
 
+db.init_app(app)
+
 
 class Target(db.Model):
     id = db.Column(db.Integer, primary_key=True)
