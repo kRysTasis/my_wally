@@ -350,8 +350,6 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                add_list = []
-
                 s = db.session.query(Status).get(user_id)
                 if s != None:
                     if s.status == 1:
@@ -364,13 +362,14 @@ def callback():
                         
                         s.status = 2
                         t.person = msg_id
-                        add_list.append(t)
-                        add_list.append(s)
 
                         # メニューを表示して操作してねと
                         messages = [
                             create_text_res_format("対象画像を送信してください")
                         ]
+
+                        db.session.add(s)
+                        db.session.add(t)
 
                         send_reply(replyToken, messages)
                         
@@ -386,8 +385,8 @@ def callback():
                         
                         s.status = 0
                         t.target = msg_id
-                        add_list.append(t)
-                        add_list.append(s)
+                        db.session.add(s)
+                        db.session.add(t)
 
                         messages = [
                             create_text_res_format("検索します。よろしいでしょうか？")
@@ -405,7 +404,6 @@ def callback():
 
                         send_reply(replyToken, messages)
 
-                    db.session.add(add_list)
                     db.session.commit()
 
                 target = db.session.query(Target).get(user_id)
