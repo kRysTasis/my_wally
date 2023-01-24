@@ -122,7 +122,9 @@ def callback():
         event_type = event['type']
         source = event['source']
         if source['type'] == 'user':
-            user_id = source['user_id']
+            user_id = source['userId']
+        else:
+            print('userIdがない')
 
         print('replyToken', replyToken)
         print('event_type', event_type)
