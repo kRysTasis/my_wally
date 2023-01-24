@@ -142,6 +142,31 @@ def create_text_res_format(text):
         "text": text,
     }
 
+
+def create_search_confirm():
+
+    return {
+        "type": "template",
+        "altText": "検索します。よろしいでしょうか？",
+        "template": {
+            "type": "confirm",
+            "text": "検索します。よろしいでしょうか？",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "はい",
+                    "data": "action=2"
+                },
+                {
+                    "type": "postback",
+                    "label": "キャンセル",
+                    "data": "action=99"
+                }
+            ]
+        }
+    }
+
+
 def create_menu():
     
     return {
@@ -370,7 +395,8 @@ def callback():
                         db.session.add(t)
 
                         messages = [
-                            create_text_res_format("検索します。よろしいでしょうか？")
+                            create_search_confirm
+                            # create_text_res_format("検索します。よろしいでしょうか？")
                         ]
 
                         send_reply(replyToken, messages)
