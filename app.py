@@ -52,7 +52,7 @@ db = SQLAlchemy(app)
 Migrate(app, db)
 
 
-class target(db.Model):
+class Target(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Text, default=0)
     target = db.Column(db.Text, default=0)
@@ -137,69 +137,91 @@ def callback():
                 print('画像取得しにいく')
                 image = get_image(msg_id)
                 print('image', image, type(image))
-                
-                t = target(user_id, msg_id)
-                db.session.add(t)
+
+                target = Target.query.get(user_id)
+                if target == None:
+                    print('ターゲットないから作成')
+                    target = Target(user_id, msg_id)
+                    db.session.add(t)
+                else:
+                    print('既にターゲットが存在するので更新')
+                    target.msg_id = msg_id
+
                 db.session.commit()
 
         messages = {
             "type": "flex",
             "altText": "flexmenu",
             "contents": {
-                "type": "carousel",
-                "contents": {
-                    "type": "bubble",
-                    # "hero": {
-                    #     "type": "image",
-                    #     "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
-                    #     "size": "full",
-                    #     "aspectMode": "cover",
-                    #     "aspectRatio": "320:213"
-                    # },
-                    "body": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "box",
-                                "layout": "baseline",
-                                "contents": [
-                                    {
-                                        "type": "text",
-                                        "text": "name:",
-                                        "size": "xs",
-                                        "margin": "md",
-                                        "color": "#8c8c8c",
-                                        "flex": 0
-                                    },
-                                    {
-                                    "type": "text",
-                                    "text": "テテ",
-                                    "size": "xs",
-                                    "margin": "md",
-                                    "flex": 0
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                    # "footer": {
-                    #     "type": "box",
-                    #     "layout": "horizontal",
-                    #     "contents": [
-                    #         {
-                    #             "type": "button",
-                    #             "style": "primary",
-                    #             "color": "#00bfff",
-                    #             "action": {
-                    #                 "type": "postback",
-                    #                 "label": "Manipulate",
-                    #                 "data": "action=run&person=tete"
-                    #             }
-                    #         }
-                    #     ]
-                    # }
+                "type": "bubble",
+                "body": {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": "Hello,"
+                        },
+                        {
+                            "type": "text",
+                            "text": "World!"
+                        }
+                    ]
                 }
+                # "type": "carousel",
+                # "contents": {
+                #     "type": "bubble",
+                #     "hero": {
+                #         "type": "image",
+                #         "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
+                #         "size": "full",
+                #         "aspectMode": "cover",
+                #         "aspectRatio": "320:213"
+                #     },
+                #     "body": {
+                #         "type": "box",
+                #         "layout": "vertical",
+                #         "contents": [
+                #             {
+                #                 "type": "box",
+                #                 "layout": "baseline",
+                #                 "contents": [
+                #                     {
+                #                         "type": "text",
+                #                         "text": "name:",
+                #                         "size": "xs",
+                #                         "margin": "md",
+                #                         "color": "#8c8c8c",
+                #                         "flex": 0
+                #                     },
+                #                     {
+                #                     "type": "text",
+                #                     "text": "テテ",
+                #                     "size": "xs",
+                #                     "margin": "md",
+                #                     "flex": 0
+                #                     }
+                #                 ]
+                #             }
+                #         ]
+                #     },
+                #     "footer": {
+                #         "type": "box",
+                #         "layout": "horizontal",
+                #         "contents": [
+                #             {
+                #                 "type": "button",
+                #                 "style": "primary",
+                #                 "color": "#00bfff",
+                #                 "action": {
+                #                     "type": "postback",
+                #                     "label": "Manipulate",
+                #                     "data": "action=run&person=tete"
+                #                 }
+                #             }
+                #         ]
+                #     }
+                # }
             }
         }
 
