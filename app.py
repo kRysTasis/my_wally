@@ -92,77 +92,77 @@ def callback():
     
     print('request', body)
 
-    # handle webhook body
-    # for event in body['events']:
-    #     replyToken = event['replyToken']
-    #     event_type = event['type']
+    handle webhook body
+    for event in body['events']:
+        replyToken = event['replyToken']
+        event_type = event['type']
 
-    #     if event_type == 'message':
-    #         message = event['text']
-    #         if 
+        # if event_type == 'message':
+        #     message = event['text']
+        #     if 
 
-    response = {
-        "type": "flex",
-        "altText": "flexmenu",
-        "contents": {
-            "type": "carousel",
+        messages = {
+            "type": "flex",
+            "altText": "flexmenu",
             "contents": {
-                "type": "bubble",
-                "hero": {
-                    "type": "image",
-                    "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
-                    "size": "full",
-                    "aspectMode": "cover",
-                    "aspectRatio": "320:213"
-                },
-                "body": {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                        {
-                            "type": "box",
-                            "layout": "baseline",
-                            "contents": [
-                                {
+                "type": "carousel",
+                "contents": {
+                    "type": "bubble",
+                    "hero": {
+                        "type": "image",
+                        "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
+                        "size": "full",
+                        "aspectMode": "cover",
+                        "aspectRatio": "320:213"
+                    },
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "name:",
+                                        "size": "xs",
+                                        "margin": "md",
+                                        "color": "#8c8c8c",
+                                        "flex": 0
+                                    },
+                                    {
                                     "type": "text",
-                                    "text": "name:",
+                                    "text": "テテ",
                                     "size": "xs",
                                     "margin": "md",
-                                    "color": "#8c8c8c",
                                     "flex": 0
-                                },
-                                {
-                                "type": "text",
-                                "text": "テテ",
-                                "size": "xs",
-                                "margin": "md",
-                                "flex": 0
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "footer": {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "contents": [
-                        {
-                            "type": "button",
-                            "style": "primary",
-                            "color": "#00bfff",
-                            "action": {
-                                "type": "postback",
-                                "label": "Manipulate",
-                                "data": "action=run&person=tete"
+                                    }
+                                ]
                             }
-                        }
-                    ]
+                        ]
+                    },
+                    "footer": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#00bfff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "Manipulate",
+                                    "data": "action=run&person=tete"
+                                }
+                            }
+                        ]
+                    }
                 }
             }
         }
-    }
 
-    send_reply(response)
+        send_reply(replyToken, messages)
 
 
 
