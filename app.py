@@ -63,7 +63,7 @@ def init():
 class Target(db.Model):
     __tablename__ = 'Target'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Text, default=0)
+    user_id = db.Column(db.Text, default=0, unique=True)
     target = db.Column(db.Text, default=0)
 
     def __init__(self, user_id, target):
@@ -113,6 +113,79 @@ def index():
     return "index"
 
 
+def create_text_res_format(text):
+    
+    return {
+        "type": "text",
+        "text": text,
+    }
+
+
+def create_select_flex_menu():
+    
+    return {
+        "type": "flex",
+        "altText": "flexmenu",
+        "contents": {
+            "type": "carousel",
+            "contents": [
+                {
+                    "type": "bubble",
+                    "hero": {
+                        "type": "image",
+                        "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
+                        "size": "full",
+                        "aspectMode": "cover",
+                        "aspectRatio": "320:213"
+                    },
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "name:",
+                                        "size": "xs",
+                                        "margin": "md",
+                                        "color": "#8c8c8c",
+                                        "flex": 0
+                                    },
+                                    {
+                                    "type": "text",
+                                    "text": "テテ",
+                                    "size": "xs",
+                                    "margin": "md",
+                                    "flex": 0
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "footer": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#00bfff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "Manipulate",
+                                    "data": "action=select_kaden_menu&menu=kadenmenu&kadenId=" + str(i)
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+
 @app.route('/callback', methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -130,31 +203,27 @@ def callback():
         source = event['source']
 
         print(f'★EventType : {event_type}')
-        
-        if source['type'] == 'user':
-            user_id = source['userId']
-        else:
-            print('×userIdがない')
-            return
+
+        user_id = source['userId']
 
         if event_type == 'message':
             message = event['message']
             msg_id = message['id']
             print(f'★Message: {message}')
-            if message['type'] == 'message':
+            
+            if message['type'] == 'text':
                 text = message['text']
                 print(f'★MessageText: {text}')
 
             elif message['type']  == 'image':
-                
                 print('画像取得しにいく', msg_id, user_id)
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                target = db.session.query(Target).filter_by(user_id=user_id)
-                print(f'★Target取得結果: {target}  =>  ', target.count())
+                target = db.session.query(Target).get(user_id=user_id)
+                print(f'★Target取得結果: {target}  =>  ')
                 
-                if target.count() == 0:
+                if target == None:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
                 else:
@@ -165,34 +234,9 @@ def callback():
                 db.session.commit()
         
         messages = [
-            {
-                "type": "text",
-                "text": "Hello, world"
-            }
+            create_text_res_format("Hello, world"),
+            create_select_flex_menu(),
         ]
-
-        # messages = {
-        #     'type': 'template',
-        #     'altText': 'this is a timer test',
-        #     'template': {
-        #         'type': 'buttons',
-        #         'actions': [
-        #             {
-        #                 "type":"datetimepicker",
-        #                 "label":"入",
-        #                 "data":"action=manipulate_timer&status=from&kadenId=" + selected_timer_kadenId,
-        #                 "mode":"datetime"
-        #             },
-        #             {
-        #                 "type":"datetimepicker",
-        #                 "label":"切",
-        #                 "data":"action=manipulate_timer&status=to&kadenId=" + selected_timer_kadenId,
-        #                 "mode":"datetime"
-        #             }
-        #         ],
-        #         'text': kaden_info[selected_timer_kadenId]['name'] + 'のタイマーを設定'
-        #     }
-        # }
 
         send_reply(replyToken, messages)
 
