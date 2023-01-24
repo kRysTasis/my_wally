@@ -11,7 +11,8 @@ RUN apt-get install -y --no-install-recommends \
 	gcc \
 	git \
 	python3-dev \
-	vim
+	vim \
+	libgl1-mesa-dev
 RUN apt-get clean
 
 RUN python3 -m pip install --upgrade pip \
