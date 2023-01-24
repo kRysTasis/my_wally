@@ -29,6 +29,7 @@ from datetime import timedelta
 import os
 import requests
 import json
+import urllib.parse
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
 YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
@@ -62,13 +63,13 @@ def init():
 
 class Target(db.Model):
     __tablename__ = 'Target'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Text, default=0, unique=True)
-    target = db.Column(db.Text, default=0)
+    # id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Text, primary_key=True)
+    target1 = db.Column(db.Text, default=0)
+    target2 = db.Column(db.Text, default=0)
 
-    def __init__(self, user_id, target):
+    def __init__(self, user_id):
         self.user_id = user_id
-        self.target = target
 
 
 class Status(db.Model):
@@ -81,8 +82,7 @@ class Status(db.Model):
     """
 
     __tablename__ = 'Status'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Text, default=0, unique=True)
+    user_id = db.Column(db.Text, primary_key=True)
     status = db.Column(db.Integer, default=0)
 
     def __init__(self, user_id, status):
@@ -161,7 +161,7 @@ def create_menu():
                                 "action": {
                                     "type": "postback",
                                     "label": "検索人物設定",
-                                    "data": "action=select_search_person"
+                                    "data": "action=0"
                                 }
                             }
                         ]
@@ -176,11 +176,49 @@ def create_menu():
                             {
                                 "type": "button",
                                 "style": "primary",
-                                "color": "#00bfff",
+                                "color": "#8CFFB4",
                                 "action": {
                                     "type": "postback",
                                     "label": "検索画像設定",
-                                    "data": "action=select_search_target"
+                                    "data": "action=1"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#18B0DE",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "検索",
+                                    "data": "action=2"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#F4FAFA",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "初期化",
+                                    "data": "action=99"
                                 }
                             }
                         ]
@@ -189,6 +227,92 @@ def create_menu():
             ]
         }
     }
+
+
+def set_search_person_status(user_id):
+    
+    print('set_search_person_status')
+
+    s = db.session.query(Status).get(user_id)
+    if s == None:
+        s = Session(user_id, 0)
+    s.status = 1
+    db.session.add(s)
+    db.session.commit()
+
+    messages = [
+        create_text_res_format("検索したい人物の画像を送信してください"),
+    ]
+
+    send_reply(replyToken, messages)
+
+
+def set_search_target_image_status(user_id):
+
+    print('set_search_target_image_status')
+    
+    s = db.session.query(Status).get(user_id)
+    if s == None:
+        s = Session(user_id, 0)
+    
+    s.status = 2
+    db.session.add(s)
+    db.session.commit()
+
+    messages = [
+        create_text_res_format("検索したい画像を送信してください"),
+    ]
+
+    send_reply(replyToken, messages)
+
+
+def search(user_id):
+
+    print('search')
+
+    s = db.session.query(Status).get(user_id)
+    if s == None:
+        s = Session(user_id, 0)
+    
+    s.status = 0
+    
+    t = db.session.query(Target).get(user_id)
+
+    if t != None:
+        db.session.delete(t)
+
+    db.session.add(s)
+    db.session.commit()
+
+    messages = [
+        create_text_res_format("検索を行います"),
+    ]
+
+    send_reply(replyToken, messages)
+
+
+def init_status(user_id):
+
+    print('init_status')
+    
+    s = db.session.query(Status).get(user_id)
+    if s != None:
+        s.status = 0
+        db.session.add(s)
+        db.session.commit()
+
+    t = db.session.query(Target).get(user_id)
+
+    if t != None:
+        db.session.delete(t)
+        db.session.commit()
+    
+    messages = [
+        create_text_res_format("初期化を行います"),
+    ]
+
+    send_reply(replyToken, messages)
+
 
 @app.route('/callback', methods=['POST'])
 def callback():
@@ -232,23 +356,34 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                target_list = db.session.query(Target).filter_by(user_id=user_id)
-                print(f'★Target取得結果: {target_list}')
+                # target = db.session.query(Target).get(user_id)
+                # print(f'★Target取得結果: {target_list}')
                 
-                if target_list.count() == 0:
-                    print('ターゲットないから作成')
-                    target = Target(user_id, msg_id)
-                else:
-                    print('既にターゲットが存在するので更新')
-                    target = target_list[0]
-                    target.msg_id = msg_id
+                # if target == None:
+                #     print('ターゲットないから作成')
+                #     target = Target(user_id)
+                # else:
+                #     print('既にターゲットが存在するので更新')
+                #     target.msg_id = msg_id
 
-                db.session.add(target)
-                db.session.commit()
+                # db.session.add(target)
+                # db.session.commit()
 
         elif event_type == 'postback':
             print('★ポストバックの処理')
             data = event['postback']['data']
+            qs = {k:v[0] for k, v in urllib.parse.parse_qs(data).items()}
+            action = qs['action']
+            
+            d = {
+                0: set_search_person_status,
+                1: set_search_target_image_status,
+                2: search,
+                99: init_status,
+            }
+
+            d[action](user_id)
+
             print('data', data)
 
     return {'statusCode': 200, 'body': '{}'}
