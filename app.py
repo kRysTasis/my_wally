@@ -41,9 +41,11 @@ app = Flask(__name__)
 # app.permanent_session_lifetime = timedelta(minutes=5)
 
 
-db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
 
 
 class target(db.Model):
