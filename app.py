@@ -9,8 +9,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
 )
-from src.handle_message import (
-    HandleMessageService
+from src.services import (
+    HandleMessage, HandleImage
 )
 
 import os
@@ -35,9 +35,6 @@ def index():
 
 @app.route('/callback', methods=['POST'])
 def callback():
-
-    
-
     signature = request.headers['X-Line-Signature']
 
     body = request.get_data(as_text=True)
@@ -59,7 +56,19 @@ def callback():
 def handle_message(event):
     print('handle_message', event)
 
-    reply = HandleMessageService.get_replay(event)
+    reply = HandleMessageService.create_reply_message(event)
+
+    line_bot_api.reply_message(
+        event.reply_token,
+        reply,
+    )
+
+# handle message from LINE
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image(event):
+    print('handle_image', event)
+
+    reply = HandleMessageService.create_reply_message(event)
 
     line_bot_api.reply_message(
         event.reply_token,

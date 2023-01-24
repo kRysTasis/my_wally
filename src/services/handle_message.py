@@ -6,7 +6,7 @@ from linebot.models import (
 
 
 @dataclass
-class HandleMessageService:
+class HandleMessage:
     
     @classmethod
     def create_reply_message(
