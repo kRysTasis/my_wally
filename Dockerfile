@@ -18,8 +18,8 @@ RUN python3 -m pip install --upgrade pip \
 &&  pip install --no-cache-dir \
     flask \
     bottle \
-    requests
+	line-bot-sdk
 
 COPY . .
 
-CMD flask run -h 0.0.0.0 -p 10000
+# CMD flask run -h 0.0.0.0 -p 10000
