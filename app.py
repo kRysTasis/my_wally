@@ -56,22 +56,24 @@ class target(db.Model):
         self.target = target
 
 
+def send_reply(reply_token, messages):
+    reply = {
+        'replyToken': reply_token,
+        'messages': messages
+    }
 
-# class MyLineBotApi(LineBotApi):
+    # ヘッダー作成
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
+    }
 
-#     def reply_message(self, reply_token, messages, notification_disabled=False, timeout=None):
-#         if not isinstance(messages, (list, tuple)):
-#             messages = [messages]
-
-#         data = {
-#             'replyToken': reply_token,
-#             'messages': [message.as_json_dict() for message in messages],
-#             'notificationDisabled': notification_disabled,
-#         }
-
-#         self._post(
-#             '/v2/bot/message/reply', data=json.dumps(data), timeout=timeout
-#         )
+    # jsonでbotに返す
+    requests.post(
+        reply_url,
+        data=json.dumps(reply),
+        headers=headers
+    )
 
 
 @app.route('/')
@@ -86,91 +88,80 @@ def callback():
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
     
-    print('callback', request)
     print('request', body)
 
     # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        print("Invalid signature. Please check your channel access token/channel secret.")
-        abort(400)
-    return 'OK'
+    # for event in body['events']:
+    #     replyToken = event['replyToken']
+    #     event_type = event['type']
 
-# handle message from LINE
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    print('handle_message', event)
+    #     if event_type == 'message':
+    #         message = event['text']
+    #         if 
 
-    
+    response = {
+        "type": "flex",
+        "altText": "flexmenu",
+        "contents": {
+            "type": "carousel",
+            "contents": {
+                "type": "bubble",
+                "hero": {
+                    "type": "image",
+                    "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
+                    "size": "full",
+                    "aspectMode": "cover",
+                    "aspectRatio": "320:213"
+                },
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "box",
+                            "layout": "baseline",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "name:",
+                                    "size": "xs",
+                                    "margin": "md",
+                                    "color": "#8c8c8c",
+                                    "flex": 0
+                                },
+                                {
+                                "type": "text",
+                                "text": "テテ",
+                                "size": "xs",
+                                "margin": "md",
+                                "flex": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "footer": {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                        {
+                            "type": "button",
+                            "style": "primary",
+                            "color": "#00bfff",
+                            "action": {
+                                "type": "postback",
+                                "label": "Manipulate",
+                                "data": "action=run&person=tete"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
 
-    t = target(event.source.user_id)
+    send_reply(response)
 
-    db.session.add(t)
-	db.session.commit()
-
-    reply = HandleMessageService.create_reply_message(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        reply,
-    )
-
-    
-
-    # session.permanent = True  
-    # if 'key' in session:
-    #     session['key'] = session['key'] + 1
-    # else:
-    #     session['key'] = 0
-
-    # print('sessioテスト', session['key'])
-
-    # messages = {
-    #     "type": "uri",
-    #     "label": "画像を選択",
-    #     "uri": "https://line.me/R/nv/cameraRoll/single"
-    # }
-    
-    # replyToken = event.reply_token 
-
-    # reply = {
-    #     'replyToken': replyToken,
-    #     'messages': messages
-    # }
-
-    # headers = {
-    #     'Content-Type': 'application/json',
-    #     'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
-    # }
-
-    # requests.post(
-    #     reply_url,
-    #     data=json.dumps(reply),
-    #     headers=headers
-    # )
-
-# handle message from LINE
-@handler.add(MessageEvent, message=ImageMessage)
-def handle_image(event):
-    print('handle_image', event)
-
-    reply = HandleImageService.create_reply_message(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        reply,
-    )
-
-
-# handle message from LINE
-@handler.add(PostbackEvent, message=TextMessage)
-def handle_postback(event):
-    print('handle_postback', event)
-
-    reply = HandlePostbackService.create_reply_message(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        reply,
-    )
 
 
 if __name__ == "__main__":
