@@ -45,8 +45,8 @@ app = Flask(__name__)
 # app.permanent_session_lifetime = timedelta(minutes=5)
 
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'db.sqlite3')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'db.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app, db)
@@ -133,6 +133,7 @@ def callback():
         if event_type == 'message':
             message = event['message']
             msg_id = message['id']
+            print(f'★Message: {message}')
             if message['type'] == 'message':
                 text = message['text']
                 print(f'★MessageText: {text}')
@@ -143,8 +144,10 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                target = Target.query.get(user_id)
-                if target == None:
+                target = Target.query.where(Target.user_id = user_id)
+                print(f'★Target取得結果: {target}  =>  ', len(target))
+                
+                if len(target) == 0:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
                     db.session.add(target)
