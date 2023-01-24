@@ -65,11 +65,13 @@ class Target(db.Model):
     __tablename__ = 'Target'
     # id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Text, primary_key=True)
-    person = db.Column(db.Text, default=0)
-    target = db.Column(db.Text, default=0)
+    person = db.Column(db.Text)
+    target = db.Column(db.Text)
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, person = '', target = ''):
         self.user_id = user_id
+        self.person = person
+        self.target = target
 
 
 class Status(db.Model):
@@ -235,7 +237,7 @@ def set_search_person_status(user_id):
 
     s = db.session.query(Status).get(user_id)
     if s == None:
-        s = Session(user_id, 0)
+        s = Status(user_id, 0)
     s.status = 1
     db.session.add(s)
     db.session.commit()
@@ -253,7 +255,7 @@ def set_search_target_image_status(user_id):
     
     s = db.session.query(Status).get(user_id)
     if s == None:
-        s = Session(user_id, 0)
+        s = Status(user_id, 0)
     
     s.status = 2
     db.session.add(s)
