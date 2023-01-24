@@ -7,10 +7,15 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, ImageMessage
+    MessageEvent,
+    PostbackEvent, 
+    TextMessage,
+    ImageMessage
 )
 from src.services import (
-    HandleMessageService, HandleImageService
+    HandleMessageService,
+    HandleImageService,
+    HandlePostbackService
 )
 
 import os
@@ -68,6 +73,18 @@ def handle_image(event):
     print('handle_image', event)
 
     reply = HandleImageService.create_reply_message(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        reply,
+    )
+
+
+# handle message from LINE
+@handler.add(PostbackEvent, message=ImageMessage)
+def handle_postback(event):
+    print('handle_image', event)
+
+    reply = HandlePostbackService.create_reply_message(event)
     line_bot_api.reply_message(
         event.reply_token,
         reply,
