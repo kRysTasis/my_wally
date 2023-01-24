@@ -22,10 +22,10 @@ class HandleMessageService:
         print('msg_id', msg_id)
         print('message', event.message)
 
-        # reply = line_bot_api.reply_message(
-        #     event.reply_token,
-        #     TextSendMessage(text='test message')
-        # )
+        reply = line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text='test message')
+        )
 
         # reply = ImageSendMessage(
         #     original_content_url='https://example.com/original.jpg',
@@ -91,18 +91,18 @@ class HandleMessageService:
         #     )
         # )
 
-        reply = FlexSendMessage(
-            alt_text='hello',
-            contents=BubbleContainer(
-                direction='ltr',
-                hero=ImageComponent(
-                    url='https://example.com/cafe.jpg',
-                    size='full',
-                    aspect_ratio='20:13',
-                    aspect_mode='cover',
-                    action=URIAction(uri='http://example.com', label='label')
-                )
-            )
-        )
+        # reply = FlexSendMessage(
+        #     alt_text='hello',
+        #     contents=BubbleContainer(
+        #         direction='ltr',
+        #         hero=ImageComponent(
+        #             url='https://example.com/cafe.jpg',
+        #             size='full',
+        #             aspect_ratio='20:13',
+        #             aspect_mode='cover',
+        #             action=URIAction(uri='http://example.com', label='label')
+        #         )
+        #     )
+        # )
 
         return reply
