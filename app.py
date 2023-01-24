@@ -71,6 +71,26 @@ class Target(db.Model):
         self.target = target
 
 
+class Status(db.Model):
+    """ユーザーの状態を表す
+    
+    status: 
+        0 => 初期
+        1 => 検索人物設定
+        2 => 検索対象設定
+    """
+
+    __tablename__ = 'Status'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Text, default=0, unique=True)
+    status = db.Column(db.Integer, default=0)
+
+    def __init__(self, user_id, status):
+        self.user_id = user_id
+        self.status = status
+
+
+
 def send_reply(reply_token, messages):
     reply = {
         'replyToken': reply_token,
@@ -120,8 +140,7 @@ def create_text_res_format(text):
         "text": text,
     }
 
-
-def create_select_flex_menu():
+def create_menu():
     
     return {
         "type": "flex",
@@ -131,40 +150,6 @@ def create_select_flex_menu():
             "contents": [
                 {
                     "type": "bubble",
-                    "hero": {
-                        "type": "image",
-                        "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
-                        "size": "full",
-                        "aspectMode": "cover",
-                        "aspectRatio": "320:213"
-                    },
-                    "body": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "box",
-                                "layout": "baseline",
-                                "contents": [
-                                    {
-                                        "type": "text",
-                                        "text": "name:",
-                                        "size": "xs",
-                                        "margin": "md",
-                                        "color": "#8c8c8c",
-                                        "flex": 0
-                                    },
-                                    {
-                                    "type": "text",
-                                    "text": "テテ",
-                                    "size": "xs",
-                                    "margin": "md",
-                                    "flex": 0
-                                    }
-                                ]
-                            }
-                        ]
-                    },
                     "footer": {
                         "type": "box",
                         "layout": "horizontal",
@@ -175,8 +160,38 @@ def create_select_flex_menu():
                                 "color": "#00bfff",
                                 "action": {
                                     "type": "postback",
-                                    "label": "Manipulate",
-                                    "data": "action=select&person=tete"
+                                    "label": "検索人物設定",
+                                    "data": "action=select_search_person"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#00bfff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "検索画像設定",
+                                    "data": "action=select_search_target"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#00bfff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "検索",
+                                    "data": "action=select_search"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "style": "danger",
+                                "color": "#ffffff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "初期化",
+                                    "data": "action=init"
                                 }
                             }
                         ]
@@ -215,6 +230,11 @@ def callback():
                 text = message['text']
                 print(f'★MessageText: {text}')
 
+                messages = [
+                    create_select_flex_menu(),
+                    create_text_res_format("こんな事が出来ますよ"),
+                ]
+
             elif message['type']  == 'image':
                 print('画像取得しにいく', msg_id, user_id)
                 image = get_image(msg_id)
@@ -233,11 +253,10 @@ def callback():
 
                 db.session.add(target)
                 db.session.commit()
-        
-        messages = [
-            create_text_res_format("Hello, world"),
-            create_select_flex_menu(),
-        ]
+
+        elif event_type == 'postback':
+            print('★ポストバックの処理')
+            pass
 
         send_reply(replyToken, messages)
 
