@@ -50,5 +50,5 @@ def callback():
 
     return {'statusCode': 200, 'body': '{}'}
 
-if __name__ == '__main__':
-    app.run()
+# if __name__ == '__main__':
+#     app.run()
