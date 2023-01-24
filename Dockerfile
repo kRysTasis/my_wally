@@ -17,8 +17,9 @@ RUN apt-get clean
 RUN python3 -m pip install --upgrade pip \
 &&  pip install --no-cache-dir \
     flask \
+    bottle \
     requests
 
 COPY . .
 
-CMD flask run -h 0.0.0.0 -p 10000
+# CMD flask run -h 0.0.0.0 -p 10000

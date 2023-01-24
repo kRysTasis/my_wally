@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from bottle import Bottle, run, route, abort, request
 import os
 import json
 import requests
@@ -15,13 +15,9 @@ YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
 
 reply_url = 'https://api.line.me/v2/bot/message/reply'
 
-app = Flask(__name__)
+app = Bottle()
 
-@app.route('/')
-def index():
-    return "index"
-
-@app.route('/callback', methods=['POST'])
+@app.route('/callback', method='POST')
 def callback():
     body = request.body
     text_body = body.read().decode('UTF-8')
@@ -51,4 +47,4 @@ def callback():
     return {'statusCode': 200, 'body': '{}'}
 
 if __name__ == '__main__':
-    app.run()
+    run(host='0.0.0.0', port=10000)
