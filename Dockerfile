@@ -25,10 +25,10 @@ RUN python3 -m pip install --upgrade pip \
 	numpy \
 	Pillow \
 	opencv-python \
-	cloudinary
-	# insightface \
-	# onnxruntime \
-	# torch
+	cloudinary \
+	insightface \
+	onnxruntime \
+	torch
 
 COPY . .
 
