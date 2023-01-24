@@ -197,25 +197,6 @@ def create_menu():
                             {
                                 "type": "button",
                                 "style": "primary",
-                                "color": "#8A69F9",
-                                "action": {
-                                    "type": "postback",
-                                    "label": "検索",
-                                    "data": "action=2"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "type": "bubble",
-                    "body": {
-                        "type": "box",
-                        "layout": "horizontal",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "style": "primary",
                                 "color": "#FF8800",
                                 "action": {
                                     "type": "postback",
@@ -383,7 +364,7 @@ def callback():
 
                         print('★★t.person', t.person)
                         
-                        s.status = 0
+                        s.status = 3
                         t.target = msg_id
                         db.session.add(s)
                         db.session.add(t)
@@ -395,7 +376,7 @@ def callback():
                         send_reply(replyToken, messages)
 
                         
-                    else:
+                    elif s.status == 0:
                         # メニューを表示して操作してねと
                         messages = [
                             create_menu(),
@@ -405,19 +386,6 @@ def callback():
                         send_reply(replyToken, messages)
 
                     db.session.commit()
-
-                target = db.session.query(Target).get(user_id)
-                print(f'★Target取得結果: {target_list}')
-                
-                if target == None:
-                    print('ターゲットないから作成')
-                    target = Target(user_id)
-                else:
-                    print('既にターゲットが存在するので更新')
-                    target.msg_id = msg_id
-
-                # db.session.add(target)
-                # db.session.commit()
 
         elif event_type == 'postback':
             print('★ポストバックの処理')
