@@ -22,12 +22,13 @@ from src.services import (
     HandlePostbackService
 )
 
+from io import BytesIO
 from datetime import timedelta 
+from PIL import Image
 
 import os
 import requests
 import json
-
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
 YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
@@ -53,8 +54,8 @@ Migrate(app, db)
 
 class target(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, default=0)
-    target = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Text, default=0)
+    target = db.Column(db.Text, default=0)
 
     def __init__(self, user_id, target):
         self.user_id = user_id
@@ -72,6 +73,8 @@ def send_reply(reply_token, messages):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
     }
+
+    print('send_reply', reply)
 
     # jsonでbotに返す
     requests.post(
@@ -117,6 +120,9 @@ def callback():
     for event in body['events']:
         replyToken = event['replyToken']
         event_type = event['type']
+        source = event['source']
+        if source['type'] == 'user':
+            user_id = source['user_id']
 
         print('replyToken', replyToken)
         print('event_type', event_type)
@@ -130,7 +136,9 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
                 
-                
+                t = target(user_id, msg_id)
+                db.session.add(t)
+                db.session.commit()
 
         messages = {
             "type": "flex",
@@ -139,13 +147,13 @@ def callback():
                 "type": "carousel",
                 "contents": {
                     "type": "bubble",
-                    "hero": {
-                        "type": "image",
-                        "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
-                        "size": "full",
-                        "aspectMode": "cover",
-                        "aspectRatio": "320:213"
-                    },
+                    # "hero": {
+                    #     "type": "image",
+                    #     "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
+                    #     "size": "full",
+                    #     "aspectMode": "cover",
+                    #     "aspectRatio": "320:213"
+                    # },
                     "body": {
                         "type": "box",
                         "layout": "vertical",
@@ -172,23 +180,23 @@ def callback():
                                 ]
                             }
                         ]
-                    },
-                    "footer": {
-                        "type": "box",
-                        "layout": "horizontal",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "style": "primary",
-                                "color": "#00bfff",
-                                "action": {
-                                    "type": "postback",
-                                    "label": "Manipulate",
-                                    "data": "action=run&person=tete"
-                                }
-                            }
-                        ]
                     }
+                    # "footer": {
+                    #     "type": "box",
+                    #     "layout": "horizontal",
+                    #     "contents": [
+                    #         {
+                    #             "type": "button",
+                    #             "style": "primary",
+                    #             "color": "#00bfff",
+                    #             "action": {
+                    #                 "type": "postback",
+                    #                 "label": "Manipulate",
+                    #                 "data": "action=run&person=tete"
+                    #             }
+                    #         }
+                    #     ]
+                    # }
                 }
             }
         }

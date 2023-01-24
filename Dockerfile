@@ -22,7 +22,14 @@ RUN python3 -m pip install --upgrade pip \
 	requests \
 	Flask-SQLAlchemy \
 	psycopg2-binary \
-	Flask-Migrate 
+	Flask-Migrate \
+	numpy
+	# Pillow \
+	# opencv-python \
+	# insightface \
+	# onnxruntime \
+	# torch
+
 
 COPY . .
 
