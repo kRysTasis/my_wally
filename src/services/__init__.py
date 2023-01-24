@@ -1,2 +1,3 @@
 from .handle_image import HandleImageService
 from .handle_message import HandleMessageService
+from .handle_postback import HandlePostbackService
