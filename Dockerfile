@@ -33,4 +33,6 @@ RUN python3 -m pip install --upgrade pip \
 
 COPY . .
 
-CMD flask db init & flask db migrate & flask db upgrade & flask run -h 0.0.0.0 -p 10000
+# flask db init & flask db migrate & flask db upgrade &
+
+CMD flask run -h 0.0.0.0 -p 10000

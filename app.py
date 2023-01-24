@@ -23,8 +23,8 @@ from src.services import (
 )
 
 from io import BytesIO
-from datetime import timedelta 
-from PIL import Image
+from datetime import timedelta
+# from PIL import Image
 
 import os
 import requests
@@ -208,3 +208,4 @@ def callback():
 
 if __name__ == "__main__":
 	app.run()
+    print('run')
