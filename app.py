@@ -92,7 +92,7 @@ def callback():
     
     print('request', body)
 
-    handle webhook body
+    # handle webhook body
     for event in body['events']:
         replyToken = event['replyToken']
         event_type = event['type']
