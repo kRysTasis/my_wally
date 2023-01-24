@@ -176,7 +176,7 @@ def create_select_flex_menu():
                                 "action": {
                                     "type": "postback",
                                     "label": "Manipulate",
-                                    "data": "action=select_kaden_menu&menu=kadenmenu&kadenId=" + str(i)
+                                    "data": "action=select&person=tete"
                                 }
                             }
                         ]
@@ -220,14 +220,15 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                target = db.session.query(Target).get(user_id=user_id)
-                print(f'★Target取得結果: {target}  =>  ')
+                target_list = db.session.query(Target).filter_by(user_id=user_id)
+                print(f'★Target取得結果: {target_list}')
                 
-                if target == None:
+                if target_list.count() == 0:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
                 else:
                     print('既にターゲットが存在するので更新')
+                    target = target_list[0]
                     target.msg_id = msg_id
 
                 db.session.add(target)
