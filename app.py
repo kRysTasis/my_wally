@@ -127,6 +127,7 @@ def callback():
             user_id = source['userId']
         else:
             print('userIdがない')
+            return
 
         print('replyToken', replyToken)
         print('event_type', event_type)
@@ -136,7 +137,7 @@ def callback():
             msg_id = message['id']
             if message['type']  == 'image':
                 
-                print('画像取得しにいく')
+                print('画像取得しにいく', msg_id, user_id)
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
