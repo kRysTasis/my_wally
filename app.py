@@ -147,7 +147,7 @@ def create_search_confirm():
 
     return {
         "type": "template",
-        "altText": "検索します。よろしいでしょうか？",
+        "altText": "this is a confirm template",
         "template": {
             "type": "confirm",
             "text": "検索します。よろしいでしょうか？",
@@ -344,6 +344,7 @@ def callback():
                 print(f'★MessageText: {text}')
 
                 messages = [
+                    create_text_res_format("メニューを開きます。"),
                     create_menu()
                 ]
 
@@ -395,7 +396,7 @@ def callback():
                         db.session.add(t)
 
                         messages = [
-                            create_search_confirm
+                            create_search_confirm()
                             # create_text_res_format("検索します。よろしいでしょうか？")
                         ]
 
