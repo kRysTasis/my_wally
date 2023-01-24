@@ -52,8 +52,9 @@ def handle_message(event):
     print('handle_message')
     print(event)
 
-    msg_id = event['message']['id']
+    msg_id = event.message.id
     print('msg_id', msg_id)
+    
     
     # line_bot_api.reply_message(
     #     event.reply_token,
