@@ -145,16 +145,16 @@ def callback():
                 text = message['text']
                 print(f'★MessageText: {text}')
 
-            if message['type']  == 'image':
+            elif message['type']  == 'image':
                 
                 print('画像取得しにいく', msg_id, user_id)
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
                 target = db.session.query(Target).filter_by(user_id=user_id)
-                print(f'★Target取得結果: {target}  =>  ', len(target))
+                print(f'★Target取得結果: {target}  =>  ', target.count())
                 
-                if len(target) == 0:
+                if target.count() == 0:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
                 else:
@@ -163,42 +163,36 @@ def callback():
 
                 db.session.add(target)
                 db.session.commit()
-
-        messages = {
-            "type": "template",
-            "altText": "This is a buttons template",
-            "template": {
-                "type": "buttons",
-                "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
-                "imageAspectRatio": "rectangle",
-                "imageSize": "cover",
-                "imageBackgroundColor": "#FFFFFF",
-                "title": "Menu",
-                "text": "Please select",
-                "defaultAction": {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/123"
-                },
-                "actions": [
-                    {
-                        "type": "postback",
-                        "label": "Buy",
-                        "data": "action=buy&itemid=123"
-                    },
-                    {
-                        "type": "postback",
-                        "label": "Add to cart",
-                        "data": "action=add&itemid=123"
-                    },
-                    {
-                        "type": "uri",
-                        "label": "View detail",
-                        "uri": "http://example.com/page/123"
-                    }
-                ]
+        
+        messages = [
+            {
+                "type": "text",
+                "text": "Hello, world"
             }
-        }
+        ]
+
+        # messages = {
+        #     'type': 'template',
+        #     'altText': 'this is a timer test',
+        #     'template': {
+        #         'type': 'buttons',
+        #         'actions': [
+        #             {
+        #                 "type":"datetimepicker",
+        #                 "label":"入",
+        #                 "data":"action=manipulate_timer&status=from&kadenId=" + selected_timer_kadenId,
+        #                 "mode":"datetime"
+        #             },
+        #             {
+        #                 "type":"datetimepicker",
+        #                 "label":"切",
+        #                 "data":"action=manipulate_timer&status=to&kadenId=" + selected_timer_kadenId,
+        #                 "mode":"datetime"
+        #             }
+        #         ],
+        #         'text': kaden_info[selected_timer_kadenId]['name'] + 'のタイマーを設定'
+        #     }
+        # }
 
         send_reply(replyToken, messages)
 
