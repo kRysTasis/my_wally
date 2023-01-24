@@ -294,12 +294,14 @@ def search(user_id):
     print('画像GET')
     person_res = get_image(person_msg_id)
     target_res = get_image(target_msg_id)
-    print(person_res)
-    print(target_res)
+    print(person_res.text)
+    print(person_res.content)
+    print(target_res.text)
+    print(target_res.content)
 
     print('画像読み込み')
-    person_img = Image.open(BytesIO(person_res.body))
-    target_img = Image.open(BytesIO(target_res.body))
+    person_img = Image.open(BytesIO(person_res.content))
+    target_img = Image.open(BytesIO(target_res.content))
 
     person_file_name = f'person-{person_msg_id}.png'
     target_file_name = f'target-{target_msg_id}.png'
