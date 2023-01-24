@@ -20,8 +20,10 @@ from src.services import (
     HandlePostbackService
 )
 
+from datetime import timedelta 
+
 import os
-import requests 
+import requests
 
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
@@ -34,6 +36,7 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 reply_url = 'https://api.line.me/v2/bot/message/reply'
 
 app = Flask(__name__)
+app.secret_key = os.environ['YOUR_SECRET_KEY']
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 
@@ -52,7 +55,6 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 #         self._post(
 #             '/v2/bot/message/reply', data=json.dumps(data), timeout=timeout
 #         )
-
 
 @app.route('/')
 def index():
@@ -87,6 +89,13 @@ def handle_message(event):
     #     event.reply_token,
     #     reply,
     # )
+
+    if 'key' in session:
+        session['key'] = session['key'] + 1
+    else:
+        session['key'] = 0
+
+    print('sessioテスト', session['key'])
 
     messages = {
         "type": "uri",

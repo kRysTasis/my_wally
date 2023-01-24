@@ -1,3 +1,4 @@
+from flask import session
 from dataclasses import dataclass
 
 from linebot.models import (
