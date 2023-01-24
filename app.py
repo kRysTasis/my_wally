@@ -167,6 +167,7 @@ def callback():
 
         send_reply(replyToken, messages)
 
+    return {'statusCode': 200, 'body': '{}'}
 
 
 if __name__ == "__main__":
