@@ -51,11 +51,14 @@ def callback():
 def handle_message(event):
     print('handle_message')
     print(event)
+
+    msg_id = event['message']['id']
+    print('msg_id', msg_id)
     
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text='test message')
-    )
+    # line_bot_api.reply_message(
+    #     event.reply_token,
+    #     TextSendMessage(text='test message')
+    # )
 
     image_message = ImageSendMessage(
         original_content_url='https://example.com/original.jpg',
