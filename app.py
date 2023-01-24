@@ -51,10 +51,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app, db)
 
-db.init_app(app)
+
+@app.before_first_request
+def init():
+    db.create_all()
 
 
 class Target(db.Model):
+    __tablename__ = 'Target'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Text, default=0)
     target = db.Column(db.Text, default=0)
@@ -144,17 +148,17 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                target = Target.query.where(Target.user_id = user_id)
+                target = db.session.query(Target).filter_by(user_id=user_id)
                 print(f'★Target取得結果: {target}  =>  ', len(target))
                 
                 if len(target) == 0:
                     print('ターゲットないから作成')
                     target = Target(user_id, msg_id)
-                    db.session.add(target)
                 else:
                     print('既にターゲットが存在するので更新')
                     target.msg_id = msg_id
 
+                db.session.add(target)
                 db.session.commit()
 
         messages = {
