@@ -166,6 +166,25 @@ def create_menu():
                             }
                         ]
                     }
+                },
+                {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "style": "primary",
+                                "color": "#00bfff",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "検索画像設定",
+                                    "data": "action=select_search_target"
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
         }
