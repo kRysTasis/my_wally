@@ -1,2 +1,2 @@
-from .handle_message import HandleMessage
-from .handle_image import HandleImage
+from .handle_image import HandleImageService
+from .handle_message import HandleMessageService

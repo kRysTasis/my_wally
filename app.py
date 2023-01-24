@@ -67,7 +67,7 @@ def handle_message(event):
 def handle_image(event):
     print('handle_image', event)
 
-    reply = HandleMessageService.create_reply_message(event)
+    reply = HandleImageService.create_reply_message(event)
     line_bot_api.reply_message(
         event.reply_token,
         reply,

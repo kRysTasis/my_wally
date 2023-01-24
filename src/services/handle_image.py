@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
+    MessageEvent, TextSendMessage, ImageSendMessage
 )
 
 
 @dataclass
-class HandleImage:
+class HandleImageService:
     
     @classmethod
     def create_reply_message(
