@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 
 from linebot.models import (
-    MessageEvent, TextSendMessage, ImageSendMessage
+    MessageEvent,
+    TextSendMessage,
+    ImageSendMessage,
+    TemplateSendMessage,
+    FlexSendMessage
 )
 
 

@@ -4,7 +4,8 @@ from linebot.models import (
     MessageEvent,
     TextSendMessage,
     ImageSendMessage,
-    TemplateSendMessage
+    TemplateSendMessage,
+    FlexSendMessage,
 )
 
 

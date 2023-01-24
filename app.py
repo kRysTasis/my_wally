@@ -10,7 +10,9 @@ from linebot.models import (
     MessageEvent,
     PostbackEvent, 
     TextMessage,
-    ImageMessage
+    ImageMessage,
+    TemplateSendMessage,
+    FlexSendMessage,
 )
 from src.services import (
     HandleMessageService,
@@ -57,7 +59,7 @@ def callback():
     return 'OK'
 
 # handle message from LINE
-@handler.add(MessageEvent, message=TextMessage)
+@handler.add(MessageEvent, message=FlexSendMessage)
 def handle_message(event):
     print('handle_message', event)
 
@@ -68,7 +70,7 @@ def handle_message(event):
     )
 
 # handle message from LINE
-@handler.add(MessageEvent, message=ImageMessage)
+@handler.add(MessageEvent, message=TemplateSendMessage)
 def handle_image(event):
     print('handle_image', event)
 
@@ -80,7 +82,7 @@ def handle_image(event):
 
 
 # handle message from LINE
-@handler.add(PostbackEvent, message=ImageMessage)
+@handler.add(PostbackEvent, message=TemplateSendMessage)
 def handle_postback(event):
     print('handle_image', event)
 
