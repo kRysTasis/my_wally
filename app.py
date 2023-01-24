@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, ImageMessage
 )
 from src.services import (
-    HandleMessage, HandleImage
+    HandleMessageService, HandleImageService
 )
 
 import os
