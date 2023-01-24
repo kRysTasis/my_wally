@@ -110,31 +110,33 @@ def index():
 def callback():
     signature = request.headers['X-Line-Signature']
 
-    body_text = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body_text)
-    
+    # body_text = request.get_data(as_text=True)    
     body = request.json
-    print('request', body)
 
-    print("body['events']", body['events'])
+    print(f'★body: {body}')
+    print()
 
     # handle webhook body
     for event in body['events']:
         replyToken = event['replyToken']
         event_type = event['type']
         source = event['source']
+
+        print(f'★EventType : {event_type}')
+        
         if source['type'] == 'user':
             user_id = source['userId']
         else:
-            print('userIdがない')
+            print('×userIdがない')
             return
-
-        print('replyToken', replyToken)
-        print('event_type', event_type)
 
         if event_type == 'message':
             message = event['message']
             msg_id = message['id']
+            if message['type'] == 'message':
+                text = message['text']
+                print(f'★MessageText: {text}')
+
             if message['type']  == 'image':
                 
                 print('画像取得しにいく', msg_id, user_id)
@@ -153,78 +155,38 @@ def callback():
                 db.session.commit()
 
         messages = {
-            "type": "flex",
-            "altText": "flexmenu",
-            "contents": {
-                "type": "bubble",
-                "body": {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "contents": [
-                        {
-                            "type": "text",
-                            "text": "Hello,"
-                        },
-                        {
-                            "type": "text",
-                            "text": "World!"
-                        }
-                    ]
-                }
-                # "type": "carousel",
-                # "contents": {
-                #     "type": "bubble",
-                #     "hero": {
-                #         "type": "image",
-                #         "url": "https://www.shinchan-social.jp/wp-content/uploads/2020/07/o0921115114470951509.jpg",
-                #         "size": "full",
-                #         "aspectMode": "cover",
-                #         "aspectRatio": "320:213"
-                #     },
-                #     "body": {
-                #         "type": "box",
-                #         "layout": "vertical",
-                #         "contents": [
-                #             {
-                #                 "type": "box",
-                #                 "layout": "baseline",
-                #                 "contents": [
-                #                     {
-                #                         "type": "text",
-                #                         "text": "name:",
-                #                         "size": "xs",
-                #                         "margin": "md",
-                #                         "color": "#8c8c8c",
-                #                         "flex": 0
-                #                     },
-                #                     {
-                #                     "type": "text",
-                #                     "text": "テテ",
-                #                     "size": "xs",
-                #                     "margin": "md",
-                #                     "flex": 0
-                #                     }
-                #                 ]
-                #             }
-                #         ]
-                #     },
-                #     "footer": {
-                #         "type": "box",
-                #         "layout": "horizontal",
-                #         "contents": [
-                #             {
-                #                 "type": "button",
-                #                 "style": "primary",
-                #                 "color": "#00bfff",
-                #                 "action": {
-                #                     "type": "postback",
-                #                     "label": "Manipulate",
-                #                     "data": "action=run&person=tete"
-                #                 }
-                #             }
-                #         ]
-                #     }
-                # }
+            "type": "template",
+            "altText": "This is a buttons template",
+            "template": {
+                "type": "buttons",
+                "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
+                "imageAspectRatio": "rectangle",
+                "imageSize": "cover",
+                "imageBackgroundColor": "#FFFFFF",
+                "title": "Menu",
+                "text": "Please select",
+                "defaultAction": {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/123"
+                },
+                "actions": [
+                    {
+                        "type": "postback",
+                        "label": "Buy",
+                        "data": "action=buy&itemid=123"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "Add to cart",
+                        "data": "action=add&itemid=123"
+                    },
+                    {
+                        "type": "uri",
+                        "label": "View detail",
+                        "uri": "http://example.com/page/123"
+                    }
+                ]
             }
         }
 
