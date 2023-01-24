@@ -392,12 +392,22 @@ def search(user_id):
     
     t = db.session.query(Target).get(user_id)
     
-    image1 = read_image(t.person_uri)
-    image2 = read_image(t.target_uri)
+    print('msgidから画像読み込み')
+    image1 = Image.open(BytesIO(get_image(t.person).content)).convert('RGB')
+    image2 = Image.open(BytesIO(get_image(t.target).content)).convert('RGB')
 
+    # print('urlから画像読み込み')
+    # image1 = read_image(t.person_uri)
+    # image2 = read_image(t.target_uri)
+
+    image1 = np.array(image1)[:, :, [2, 1, 0]]
+    image2 = np.array(image2)[:, :, [2, 1, 0]]
+
+    print('insightfaceで認識させる')
     response1 = get_faces(image1)
     response2 = get_faces(image2)
 
+    print('結果まとめる')
     embeddings1 = [face['embedding'] for face in response1['faces']]
     embeddings2 = [face['embedding'] for face in response2['faces']]
     embeddings = embeddings1 + embeddings2
@@ -413,6 +423,7 @@ def search(user_id):
         for i, pair in enumerate(pairs)
     ]
     
+    print('indexゲット')
     # 画像2から3人まで確率が高い順でindexゲットしbbox描画
     target_index = get_target_index(similarities)
 
