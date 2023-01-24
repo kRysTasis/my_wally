@@ -242,11 +242,9 @@ def set_search_person_status(user_id):
     db.session.add(s)
     db.session.commit()
 
-    messages = [
+    return [
         create_text_res_format("検索したい人物の画像を送信してください"),
     ]
-
-    send_reply(replyToken, messages)
 
 
 def set_search_target_image_status(user_id):
@@ -261,11 +259,9 @@ def set_search_target_image_status(user_id):
     db.session.add(s)
     db.session.commit()
 
-    messages = [
+    return [
         create_text_res_format("検索したい画像を送信してください"),
     ]
-
-    send_reply(replyToken, messages)
 
 
 def search(user_id):
@@ -286,11 +282,9 @@ def search(user_id):
     db.session.add(s)
     db.session.commit()
 
-    messages = [
+    return [
         create_text_res_format("検索を行います"),
     ]
-
-    send_reply(replyToken, messages)
 
 
 def init_status(user_id):
@@ -309,11 +303,9 @@ def init_status(user_id):
         db.session.delete(t)
         db.session.commit()
     
-    messages = [
+    return [
         create_text_res_format("初期化を行います"),
     ]
-
-    send_reply(replyToken, messages)
 
 
 @app.route('/callback', methods=['POST'])
@@ -384,7 +376,11 @@ def callback():
                 '99': init_status,
             }
 
-            d[action](user_id)
+            messages = d[action](user_id)
+            
+            if len(messages) != 0:
+                send_reply(replyToken, messages)
+            
 
             print('data', data)
 
