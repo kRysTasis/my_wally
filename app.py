@@ -74,11 +74,22 @@ class Target(db.Model):
     user_id = db.Column(db.Text, primary_key=True)
     person = db.Column(db.Text)
     target = db.Column(db.Text)
+    person_uri = db.Column(db.Text)
+    target_uri = db.Column(db.Text)
 
-    def __init__(self, user_id, person = '', target = ''):
+    def __init__(
+        self, 
+        user_id,
+        person = '',
+        target = '',
+        person_uri = '',
+        target_uri = ''
+    ):
         self.user_id = user_id
         self.person = person
         self.target = target
+        self.person_uri = person_uri
+        self.target_uri = target_uri
 
 
 class Status(db.Model):
@@ -244,6 +255,15 @@ def create_menu():
     }
 
 
+def create_image_res_format(uri):
+    
+    return {
+        "type": "image",
+        "originalContentUrl": uri,
+        "previewImageUrl": uri
+    }
+
+
 def set_search_person_status(user_id):
     
     print('set_search_person_status')
@@ -295,8 +315,6 @@ def search(user_id):
     print('画像GET')
     person_res = get_image(person_msg_id)
     target_res = get_image(target_msg_id)
-    print(person_res.content)
-    print(target_res.content)
 
     print('画像読み込み')
     person_img = Image.open(BytesIO(person_res.content))
@@ -315,14 +333,23 @@ def search(user_id):
     print('person_result', person_result)
     print('target_result', target_result)
 
-    if t != None:
-        db.session.delete(t)
+    uri1 = person_result['secure_url']
+    uri2 = target_result['secure_url']
 
+    t.person_uri = uri1
+    t.target_uri = uri2
+
+    # if t != None:
+    #     db.session.delete(t)
+
+    db.session.add(t)
     db.session.add(s)
     db.session.commit()
 
     return [
-        create_text_res_format("検索を行います"),
+        create_image_res_format(uri1),
+        create_image_res_format(uri2),
+        create_text_res_format("これらの画像の検索処理を行います"),
     ]
 
 
