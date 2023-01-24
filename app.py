@@ -208,4 +208,4 @@ def callback():
 
 if __name__ == "__main__":
 	app.run()
-    print('run')
+    db.create_all()
