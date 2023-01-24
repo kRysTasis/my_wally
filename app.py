@@ -95,10 +95,21 @@ def callback():
 
     print('request', body)
 
+    body2 = json.loads(request.json)
+    for event in body2['events']:
+        replyToken = event['replyToken']
+        event_type = event['type']
+
+        print('replyToken2', replyToken)
+        print('event_type2', event_type)
+
     # handle webhook body
     for event in body['events']:
         replyToken = event['replyToken']
         event_type = event['type']
+
+        print('replyToken', replyToken)
+        print('event_type', event_type)
 
         # if event_type == 'message':
         #     message = event['text']
