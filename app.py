@@ -31,6 +31,7 @@ import requests
 import json
 import urllib.parse
 import cloudinary
+import cloudinary.uploader
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
 YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
@@ -294,9 +295,7 @@ def search(user_id):
     print('画像GET')
     person_res = get_image(person_msg_id)
     target_res = get_image(target_msg_id)
-    print(person_res.text)
     print(person_res.content)
-    print(target_res.text)
     print(target_res.content)
 
     print('画像読み込み')
@@ -315,8 +314,6 @@ def search(user_id):
     target_result = cloudinary.uploader.upload(file=target_file_name, public_id=target_msg_id)
     print('person_result', person_result)
     print('target_result', target_result)
-
-    print(person_img, target_img)
 
     if t != None:
         db.session.delete(t)
