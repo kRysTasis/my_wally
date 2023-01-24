@@ -37,6 +37,7 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
 
 reply_url = 'https://api.line.me/v2/bot/message/reply'
+image_url = 'https://api-data.line.me/v2/bot/message/{msg_id}/content'
 
 app = Flask(__name__)
 # app.secret_key = os.environ['YOUR_SECRET_KEY']
@@ -79,6 +80,21 @@ def send_reply(reply_token, messages):
         headers=headers
     )
 
+def get_image(msg_id):
+
+    url = image_url.format(msg_id=msg_id)
+
+    # ヘッダー作成
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
+    }
+
+    return requests.get(
+        url,
+        headers=headers
+    )
+
 
 @app.route('/')
 def index():
@@ -105,9 +121,16 @@ def callback():
         print('replyToken', replyToken)
         print('event_type', event_type)
 
-        # if event_type == 'message':
-        #     message = event['text']
-        #     if 
+        if event_type == 'message':
+            message = event['message']
+            msg_id = message['id']
+            if message['type']  == 'image':
+                
+                print('画像取得しにいく')
+                image = get_image(msg_id)
+                print('image', image, type(image))
+                
+                
 
         messages = {
             "type": "flex",
