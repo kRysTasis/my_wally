@@ -150,7 +150,7 @@ def create_menu():
             "contents": [
                 {
                     "type": "bubble",
-                    "footer": {
+                    "body": {
                         "type": "box",
                         "layout": "horizontal",
                         "contents": [
@@ -162,63 +162,6 @@ def create_menu():
                                     "type": "postback",
                                     "label": "検索人物設定",
                                     "data": "action=select_search_person"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "type": "bubble",
-                    "footer": {
-                        "type": "box",
-                        "layout": "horizontal",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "style": "primary",
-                                "color": "#00bfff",
-                                "action": {
-                                    "type": "postback",
-                                    "label": "検索画像設定",
-                                    "data": "action=select_search_target"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "type": "bubble",
-                    "footer": {
-                        "type": "box",
-                        "layout": "horizontal",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "style": "primary",
-                                "color": "#00bfff",
-                                "action": {
-                                    "type": "postback",
-                                    "label": "検索",
-                                    "data": "action=select_search"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "type": "bubble",
-                    "footer": {
-                        "type": "box",
-                        "layout": "horizontal",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "style": "danger",
-                                "color": "#ffffff",
-                                "action": {
-                                    "type": "postback",
-                                    "label": "初期化",
-                                    "data": "action=init"
                                 }
                             }
                         ]
@@ -258,9 +201,10 @@ def callback():
                 print(f'★MessageText: {text}')
 
                 messages = [
-                    create_menu(),
-                    create_text_res_format("こんな事が出来ますよ"),
+                    create_menu()
                 ]
+
+                # create_text_res_format("こんな事が出来ますよ"),
 
                 send_reply(replyToken, messages)
 
@@ -285,7 +229,8 @@ def callback():
 
         elif event_type == 'postback':
             print('★ポストバックの処理')
-            pass
+            data = event['postback']['data']
+            print('data', data)
 
     return {'statusCode': 200, 'body': '{}'}
 
