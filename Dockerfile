@@ -19,8 +19,11 @@ RUN python3 -m pip install --upgrade pip \
     flask \
     bottle \
 	line-bot-sdk \
-	requests
+	requests \
+	Flask-SQLAlchemy \
+	psycopg2-binary \
+	Flask-Migrate 
 
 COPY . .
 
-CMD flask run -h 0.0.0.0 -p 10000
+CMD flask db init & flask run -h 0.0.0.0 -p 10000

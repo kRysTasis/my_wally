@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session
+from flask_sqlalchemy import SQLAlchemy
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -40,6 +41,22 @@ app.secret_key = os.environ['YOUR_SECRET_KEY']
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 
+db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+class target(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer)
+    target = db.Column(db.Integer)
+	
+	def __init__(self, user_id, target):
+		self.user_id = user_id
+        self.target = target
+
+
+
 # class MyLineBotApi(LineBotApi):
 
 #     def reply_message(self, reply_token, messages, notification_disabled=False, timeout=None):
@@ -55,6 +72,7 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 #         self._post(
 #             '/v2/bot/message/reply', data=json.dumps(data), timeout=timeout
 #         )
+
 
 @app.route('/')
 def index():
@@ -84,42 +102,52 @@ def callback():
 def handle_message(event):
     print('handle_message', event)
 
-    # reply = HandleMessageService.create_reply_message(event)
-    # line_bot_api.reply_message(
-    #     event.reply_token,
-    #     reply,
-    # )
-
-    if 'key' in session:
-        session['key'] = session['key'] + 1
-    else:
-        session['key'] = 0
-
-    print('sessioテスト', session['key'])
-
-    messages = {
-        "type": "uri",
-        "label": "画像を選択",
-        "uri": "https://line.me/R/nv/cameraRoll/single"
-    }
     
-    replyToken = event['replyToken']
 
-    reply = {
-        'replyToken': replyToken,
-        'messages': messages
-    }
+    t = target(event.source.user_id)
 
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
-    }
+    db.session.add(t)
+	db.session.commit()
 
-    requests.post(
-        reply_url,
-        data=json.dumps(reply),
-        headers=headers
+    reply = HandleMessageService.create_reply_message(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        reply,
     )
+
+    
+
+    # session.permanent = True  
+    # if 'key' in session:
+    #     session['key'] = session['key'] + 1
+    # else:
+    #     session['key'] = 0
+
+    # print('sessioテスト', session['key'])
+
+    # messages = {
+    #     "type": "uri",
+    #     "label": "画像を選択",
+    #     "uri": "https://line.me/R/nv/cameraRoll/single"
+    # }
+    
+    # replyToken = event.reply_token 
+
+    # reply = {
+    #     'replyToken': replyToken,
+    #     'messages': messages
+    # }
+
+    # headers = {
+    #     'Content-Type': 'application/json',
+    #     'Authorization': 'Bearer {}'.format(YOUR_CHANNEL_ACCESS_TOKEN)
+    # }
+
+    # requests.post(
+    #     reply_url,
+    #     data=json.dumps(reply),
+    #     headers=headers
+    # )
 
 # handle message from LINE
 @handler.add(MessageEvent, message=ImageMessage)
