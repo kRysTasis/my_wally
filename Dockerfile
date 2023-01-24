@@ -17,19 +17,17 @@ RUN apt-get clean
 RUN python3 -m pip install --upgrade pip \
 &&  pip install --no-cache-dir \
     flask \
-    bottle \
 	line-bot-sdk \
 	requests \
 	Flask-SQLAlchemy \
 	psycopg2-binary \
 	Flask-Migrate \
-	numpy
-	# Pillow \
-	# opencv-python \
-	# insightface \
-	# onnxruntime \
-	# torch
-
+	numpy \
+	Pillow \
+	opencv-python \
+	insightface \
+	onnxruntime \
+	torch
 
 COPY . .
 

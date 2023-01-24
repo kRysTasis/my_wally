@@ -24,7 +24,7 @@ from src.services import (
 
 from io import BytesIO
 from datetime import timedelta
-# from PIL import Image
+from PIL import Image
 
 import os
 import requests
@@ -282,6 +282,20 @@ def search(user_id):
     
     t = db.session.query(Target).get(user_id)
 
+    person_msg_id = t.person
+    target_msg_id = t.target
+    
+    print('画像GET')
+    person_res = get_image(person_msg_id)
+    target_res = get_image(target_msg_id)
+    print(person_res, target_res)
+
+    print('画像読み込み')
+    person_img = Image.open(BytesIO(person_res))
+    target_img = Image.open(BytesIO(target_res))
+
+    print(person_img, target_img)
+
     if t != None:
         db.session.delete(t)
 
@@ -353,10 +367,6 @@ def callback():
                 send_reply(replyToken, messages)
 
             elif message['type']  == 'image':
-                print('画像取得しにいく', msg_id, user_id)
-                image = get_image(msg_id)
-                print('image', image, type(image))
-
                 s = db.session.query(Status).get(user_id)
                 if s != None:
                     if s.status == 1:
