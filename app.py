@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -43,10 +44,10 @@ app = Flask(__name__)
 
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + + os.path.join(app.root_path, 'db.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+Migrate(app, db)
 
 
 class target(db.Model):
@@ -92,16 +93,9 @@ def callback():
     app.logger.info("Request body: " + body_text)
     
     body = request.json
-
     print('request', body)
 
-    body2 = json.loads(request.json)
-    for event in body2['events']:
-        replyToken = event['replyToken']
-        event_type = event['type']
-
-        print('replyToken2', replyToken)
-        print('event_type2', event_type)
+    print("body['events']", body['events'])
 
     # handle webhook body
     for event in body['events']:
