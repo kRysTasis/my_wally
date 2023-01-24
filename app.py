@@ -44,8 +44,11 @@ app = Flask(__name__)
 # app.secret_key = os.environ['YOUR_SECRET_KEY']
 # app.permanent_session_lifetime = timedelta(minutes=5)
 
+database_url = os.environ['DATABASE_URL']
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'db.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
