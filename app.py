@@ -168,7 +168,7 @@ def create_search_confirm():
         "altText": "this is a confirm template",
         "template": {
             "type": "confirm",
-            "text": "検索します。よろしいでしょうか？",
+            "text": "これらの画像の照合をします。よろしいでしょうか？",
             "actions": [
                 {
                     "type": "postback",
@@ -301,55 +301,47 @@ def search(user_id):
 
     print('search')
 
-    s = db.session.query(Status).get(user_id)
-    if s == None:
-        s = Status(user_id, 0)
     
-    s.status = 0
     
-    t = db.session.query(Target).get(user_id)
-
-    person_msg_id = t.person
-    target_msg_id = t.target
     
-    print('画像GET')
-    person_res = get_image(person_msg_id)
-    target_res = get_image(target_msg_id)
+    # print('画像GET')
+    # person_res = get_image(person_msg_id)
+    # target_res = get_image(target_msg_id)
 
-    print('画像読み込み')
-    person_img = Image.open(BytesIO(person_res.content))
-    target_img = Image.open(BytesIO(target_res.content))
+    # print('画像読み込み')
+    # person_img = Image.open(BytesIO(person_res.content))
+    # target_img = Image.open(BytesIO(target_res.content))
 
-    person_file_name = f'person-{person_msg_id}.png'
-    target_file_name = f'target-{target_msg_id}.png'
+    # person_file_name = f'person-{person_msg_id}.png'
+    # target_file_name = f'target-{target_msg_id}.png'
 
-    print('Pillowで画像として一旦保存')
-    person_img.save(person_file_name)
-    target_img.save(target_file_name)
+    # print('Pillowで画像として一旦保存')
+    # person_img.save(person_file_name)
+    # target_img.save(target_file_name)
 
-    print('cloudinaryに保存')
-    person_result = cloudinary.uploader.upload(file=person_file_name, public_id=person_msg_id)
-    target_result = cloudinary.uploader.upload(file=target_file_name, public_id=target_msg_id)
-    print('person_result', person_result)
-    print('target_result', target_result)
+    # print('cloudinaryに保存')
+    # person_result = cloudinary.uploader.upload(file=person_file_name, public_id=person_msg_id)
+    # target_result = cloudinary.uploader.upload(file=target_file_name, public_id=target_msg_id)
+    # print('person_result', person_result)
+    # print('target_result', target_result)
 
-    uri1 = person_result['secure_url']
-    uri2 = target_result['secure_url']
+    # uri1 = person_result['secure_url']
+    # uri2 = target_result['secure_url']
 
-    t.person_uri = uri1
-    t.target_uri = uri2
+    # t.person_uri = uri1
+    # t.target_uri = uri2
 
     # if t != None:
     #     db.session.delete(t)
 
-    db.session.add(t)
-    db.session.add(s)
-    db.session.commit()
+    # db.session.add(t)
+    # db.session.add(s)
+    # db.session.commit()
 
     return [
-        create_image_res_format(uri1),
-        create_image_res_format(uri2),
-        create_text_res_format("これらの画像の検索処理を行います"),
+        # create_image_res_format(uri1),
+        # create_image_res_format(uri2),
+        create_text_res_format("照合処理実行結果"),
     ]
 
 
@@ -448,12 +440,46 @@ def callback():
                         
                         s.status = 3
                         t.target = msg_id
+
+                        person_msg_id = t.person
+                        target_msg_id = t.target
+
+                        print('画像GET')
+                        person_res = get_image(person_msg_id)
+                        target_res = get_image(target_msg_id)
+
+                        print('画像読み込み')
+                        person_img = Image.open(BytesIO(person_res.content))
+                        target_img = Image.open(BytesIO(target_res.content))
+
+                        person_file_name = f'person-{person_msg_id}.png'
+                        target_file_name = f'target-{target_msg_id}.png'
+
+                        print('Pillowで画像として一旦保存')
+                        person_img.save(person_file_name)
+                        target_img.save(target_file_name)
+
+                        print('cloudinaryに保存')
+                        person_result = cloudinary.uploader.upload(file=person_file_name, public_id=person_msg_id)
+                        target_result = cloudinary.uploader.upload(file=target_file_name, public_id=target_msg_id)
+                        print('person_result', person_result)
+                        print('target_result', target_result)
+
+                        uri1 = person_result['secure_url']
+                        uri2 = target_result['secure_url']
+
+                        t.person_uri = uri1
+                        t.target_uri = uri2
+
+
                         db.session.add(s)
                         db.session.add(t)
+                        db.session.commit()
 
                         messages = [
+                            create_image_res_format(uri1),
+                            create_image_res_format(uri2),
                             create_search_confirm()
-                            # create_text_res_format("検索します。よろしいでしょうか？")
                         ]
 
                         send_reply(replyToken, messages)
