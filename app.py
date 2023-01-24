@@ -30,6 +30,7 @@ import os
 import requests
 import json
 import urllib.parse
+import cloudinary
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
 YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
@@ -37,6 +38,11 @@ YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+cloudinary.config(
+    cloud_name = os.environ['CLOUD_NAME'],
+    api_key = os.environ['CLOUDINARY_API_KEY'],
+    api_secret = os.environ['CLOUDINARY_API_SECRET']
+)
 
 reply_url = 'https://api.line.me/v2/bot/message/reply'
 image_url = 'https://api-data.line.me/v2/bot/message/{msg_id}/content'
@@ -293,6 +299,19 @@ def search(user_id):
     print('画像読み込み')
     person_img = Image.open(BytesIO(person_res))
     target_img = Image.open(BytesIO(target_res))
+
+    person_file_name = f'person-{person_msg_id}.png'
+    target_file_name = f'target-{target_msg_id}.png'
+
+    print('Pillowで画像として一旦保存')
+    person_img.save(person_file_name)
+    target_img.save(target_file_name)
+
+    print('cloudinaryに保存')
+    person_result = cloudinary.uploader.upload(file=person_file_name, public_id=person_msg_id)
+    target_result = cloudinary.uploader.upload(file=target_file_name, public_id=target_msg_id)
+    print('person_result', person_result)
+    print('target_result', target_result)
 
     print(person_img, target_img)
 
