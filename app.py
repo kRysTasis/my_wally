@@ -350,15 +350,73 @@ def callback():
                 image = get_image(msg_id)
                 print('image', image, type(image))
 
-                # target = db.session.query(Target).get(user_id)
-                # print(f'★Target取得結果: {target_list}')
+                add_list = []
+
+                s = db.session.query(Status).get(user_id)
+                if s != None:
+                    if s.status == 1:
+                        # 対象人物に設定してstatus=2に
+
+                        t = db.session.query(Target).get(user_id)
+                        if t == None:
+                            print('ターゲットないから作成')
+                            t = Target(user_id)
+                        
+                        s.status = 2
+                        t.person = msg_id
+                        add_list.append(t)
+                        add_list.append(s)
+
+                        # メニューを表示して操作してねと
+                        messages = [
+                            create_text_res_format("対象画像を送信してください")
+                        ]
+
+                        send_reply(replyToken, messages)
+                        
+                    elif s.status == 2:
+                        # 対象画像に設定して人物が設定してあれば検索するかの案内
+
+                        t = db.session.query(Target).get(user_id)
+                        if t == None:
+                            print('ターゲットないから作成')
+                            t = Target(user_id)
+
+                        print('★★t.person', t.person)
+                        
+                        s.status = 0
+                        t.target = msg_id
+                        add_list.append(t)
+                        add_list.append(s)
+
+                        messages = [
+                            create_text_res_format("検索します。よろしいでしょうか？")
+                        ]
+
+                        send_reply(replyToken, messages)
+
+                        
+                    else:
+                        # メニューを表示して操作してねと
+                        messages = [
+                            create_menu(),
+                            create_text_res_format("メニューを操作してね")
+                        ]
+
+                        send_reply(replyToken, messages)
+
+                    db.session.add(add_list)
+                    db.session.commit()
+
+                target = db.session.query(Target).get(user_id)
+                print(f'★Target取得結果: {target_list}')
                 
-                # if target == None:
-                #     print('ターゲットないから作成')
-                #     target = Target(user_id)
-                # else:
-                #     print('既にターゲットが存在するので更新')
-                #     target.msg_id = msg_id
+                if target == None:
+                    print('ターゲットないから作成')
+                    target = Target(user_id)
+                else:
+                    print('既にターゲットが存在するので更新')
+                    target.msg_id = msg_id
 
                 # db.session.add(target)
                 # db.session.commit()
