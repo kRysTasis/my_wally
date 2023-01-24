@@ -163,7 +163,16 @@ def create_menu():
                                     "label": "検索人物設定",
                                     "data": "action=select_search_person"
                                 }
-                            },
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "footer": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
                             {
                                 "type": "button",
                                 "style": "primary",
@@ -173,7 +182,16 @@ def create_menu():
                                     "label": "検索画像設定",
                                     "data": "action=select_search_target"
                                 }
-                            },
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "footer": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
                             {
                                 "type": "button",
                                 "style": "primary",
@@ -183,7 +201,16 @@ def create_menu():
                                     "label": "検索",
                                     "data": "action=select_search"
                                 }
-                            },
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "bubble",
+                    "footer": {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
                             {
                                 "type": "button",
                                 "style": "danger",
