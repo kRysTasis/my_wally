@@ -231,9 +231,11 @@ def callback():
                 print(f'★MessageText: {text}')
 
                 messages = [
-                    create_select_flex_menu(),
+                    create_menu(),
                     create_text_res_format("こんな事が出来ますよ"),
                 ]
+
+                send_reply(replyToken, messages)
 
             elif message['type']  == 'image':
                 print('画像取得しにいく', msg_id, user_id)
@@ -257,8 +259,6 @@ def callback():
         elif event_type == 'postback':
             print('★ポストバックの処理')
             pass
-
-        send_reply(replyToken, messages)
 
     return {'statusCode': 200, 'body': '{}'}
 
