@@ -376,10 +376,10 @@ def callback():
             action = qs['action']
             
             d = {
-                0: set_search_person_status,
-                1: set_search_target_image_status,
-                2: search,
-                99: init_status,
+                '0': set_search_person_status,
+                '1': set_search_target_image_status,
+                '2': search,
+                '99': init_status,
             }
 
             d[action](user_id)
