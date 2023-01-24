@@ -1,4 +1,4 @@
-from typing import dataclass
+from dataclasses import dataclass
 
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
