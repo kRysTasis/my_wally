@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -21,7 +21,7 @@ from src.services import (
 )
 
 import os
-import requests
+import requests 
 
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
@@ -34,6 +34,7 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 reply_url = 'https://api.line.me/v2/bot/message/reply'
 
 app = Flask(__name__)
+app.permanent_session_lifetime = timedelta(minutes=5)
 
 
 # class MyLineBotApi(LineBotApi):
@@ -93,7 +94,7 @@ def handle_message(event):
         "uri": "https://line.me/R/nv/cameraRoll/single"
     }
     
-    replyToken = event.replyToken
+    replyToken = event['replyToken']
 
     reply = {
         'replyToken': replyToken,
@@ -124,9 +125,9 @@ def handle_image(event):
 
 
 # handle message from LINE
-@handler.add(PostbackEvent, message=TemplateSendMessage)
+@handler.add(PostbackEvent, message=TextMessage)
 def handle_postback(event):
-    print('handle_image', event)
+    print('handle_postback', event)
 
     reply = HandlePostbackService.create_reply_message(event)
     line_bot_api.reply_message(
