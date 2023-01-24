@@ -37,8 +37,8 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 reply_url = 'https://api.line.me/v2/bot/message/reply'
 
 app = Flask(__name__)
-app.secret_key = os.environ['YOUR_SECRET_KEY']
-app.permanent_session_lifetime = timedelta(minutes=5)
+# app.secret_key = os.environ['YOUR_SECRET_KEY']
+# app.permanent_session_lifetime = timedelta(minutes=5)
 
 
 db = SQLAlchemy(app)
@@ -47,12 +47,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 class target(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	user_id = db.Column(db.Integer)
-    target = db.Column(db.Integer)
-	
-	def __init__(self, user_id, target):
-		self.user_id = user_id
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, default=0)
+    target = db.Column(db.Integer, default=0)
+
+    def __init__(self, user_id, target):
+        self.user_id = user_id
         self.target = target
 
 
