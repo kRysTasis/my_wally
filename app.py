@@ -65,8 +65,8 @@ class Target(db.Model):
     __tablename__ = 'Target'
     # id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Text, primary_key=True)
-    target1 = db.Column(db.Text, default=0)
-    target2 = db.Column(db.Text, default=0)
+    person = db.Column(db.Text, default=0)
+    target = db.Column(db.Text, default=0)
 
     def __init__(self, user_id):
         self.user_id = user_id
@@ -195,7 +195,7 @@ def create_menu():
                             {
                                 "type": "button",
                                 "style": "primary",
-                                "color": "#18B0DE",
+                                "color": "#8A69F9",
                                 "action": {
                                     "type": "postback",
                                     "label": "検索",
@@ -214,7 +214,7 @@ def create_menu():
                             {
                                 "type": "button",
                                 "style": "primary",
-                                "color": "#F4FAFA",
+                                "color": "#FF8800",
                                 "action": {
                                     "type": "postback",
                                     "label": "初期化",
@@ -272,7 +272,7 @@ def search(user_id):
 
     s = db.session.query(Status).get(user_id)
     if s == None:
-        s = Session(user_id, 0)
+        s = Status(user_id, 0)
     
     s.status = 0
     
