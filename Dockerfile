@@ -22,7 +22,7 @@ RUN apt-get install -y --no-install-recommends \
     pandoc \
     python3-dev \
     python3-pip \
-    python3-setuptools \
+    python3-setuptools
 RUN apt-get clean
 
 RUN python3 -m pip install --upgrade pip setuptools \
