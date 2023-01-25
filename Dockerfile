@@ -32,16 +32,17 @@ RUN python3 -m pip install --upgrade pip \
 	psycopg2-binary \
 	Flask-Migrate \
 	numpy \
+	onnxruntime \
 	# onnxruntime-gpu \
 	Pillow \
 	pypandoc \
-	# insightface \
+	insightface \
 	opencv-python \	
 	cloudinary
 
 
 COPY . .
-COPY requirements.txt ./
-RUN python3 -m pip install --requirement requirements.txt
+# COPY requirements.txt ./
+# RUN python3 -m pip install --requirement requirements.txt
 
 CMD flask run -h 0.0.0.0 -p 10000
