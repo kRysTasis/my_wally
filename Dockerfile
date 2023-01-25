@@ -24,18 +24,18 @@ RUN apt-get clean
 RUN python3 -m pip install --upgrade pip \
 && pip install --no-cache-dir \
     flask \
-	Cython \
-	mxnet \
+	Cython==0.29.24 \
+	mxnet==1.8.0 \
 	# line-bot-sdk \
 	requests \
 	Flask-SQLAlchemy \
 	psycopg2-binary \
 	Flask-Migrate \
 	numpy \
-	onnxruntime-gpu \
+	onnxruntime-gpu==1.8.1 \
 	Pillow \
 	pypandoc \
-	insightface \
+	insightface==0.4 \
 	opencv-python \	
 	cloudinary
 
