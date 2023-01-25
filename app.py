@@ -52,7 +52,7 @@ def init():
     db.create_all()
 
 
-def read_image(path) -> Image:
+def read_image(path):
     """画像ファイルを読み込む関数"""
     
     image = np.array(Image.open(path).convert('RGB'))
@@ -78,9 +78,9 @@ def decode_np(text):
     return np.load(bio)
 
 
-def add_bboxes_to_image_top_three(ax, image: np.ndarray,
-                        bboxes: list[list[int]],
-                        line_width: int = 2,
+def add_bboxes_to_image_top_three(ax, image,
+                        bboxes,
+                        line_width = 2,
                         border_color=(0, 1, 0, 1)) -> None:
     """バウンディングボックス描画のためのaxを作成する関数
 
