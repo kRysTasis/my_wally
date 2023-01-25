@@ -15,18 +15,13 @@ RUN apt-get install -y --no-install-recommends \
 	git \
 	vim \
 	libgl1-mesa-dev \
-	build-essential \
-    ca-certificates \
-    libopenblas-base \
-    libopencv-dev \
-    pandoc \
     python3-dev \
     python3-pip \
     python3-setuptools
 RUN apt-get clean
 
-RUN python3 -m pip install --upgrade pip setuptools \
-&&  pip install --no-cache-dir \
+RUN python3 -m pip install --upgrade pip \
+&& pip install --no-cache-dir \
     flask \
 	Cython \
 	mxnet \
@@ -36,13 +31,12 @@ RUN python3 -m pip install --upgrade pip setuptools \
 	psycopg2-binary \
 	Flask-Migrate \
 	numpy \
-	onnxruntime-gpu==1.8.1 \
+	onnxruntime-gpu \
 	Pillow \
-	pypandoc==1.6.3 \
+	pypandoc \
 	insightface \
 	opencv-python \	
 	cloudinary
-	# torch
 
 COPY . .
 CMD flask run -h 0.0.0.0 -p 10000
