@@ -5,49 +5,44 @@ ENV PYTHONUNBUFFERED 1
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# RUN apt-get update && apt-get install -y tzdata
-# ENV TZ=Asia/Tokyo
-
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
-	python3.9 \
 	net-tools \
 	sudo \
 	bzip2 \
 	curl \
 	gcc \
 	git \
-	python3-dev \
 	vim \
-	libgl1-mesa-dev
+	libgl1-mesa-dev \
+	build-essential \
+    ca-certificates \
+    libopenblas-base \
+    libopencv-dev \
+    pandoc \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
 RUN apt-get clean
 
-RUN python3 -m pip install --upgrade pip \
+RUN python3 -m pip install --upgrade pip setuptools \
 &&  pip install --no-cache-dir \
-	# black \
-    # jupyterlab \
-    # jupyterlab_code_formatter \
-    # jupyterlab-git \
-    # lckr-jupyterlab-variableinspector \
-    # jupyterlab_widgets \
-    # ipywidgets \
-    # import-ipynb \
     flask \
-	line-bot-sdk \
+	Cython \
+	mxnet \
+	# line-bot-sdk \
 	requests \
 	Flask-SQLAlchemy \
 	psycopg2-binary \
 	Flask-Migrate \
 	numpy \
+	onnxruntime-gpu==1.8.1 \
 	Pillow \
+	pypandoc==1.6.3 \
+	insightface \
 	opencv-python \	
-	cloudinary \
-	torch torchvision \
-	onnxruntime \
-	insightface
+	cloudinary
+	# torch
 
 COPY . .
-
-# flask db init & flask db migrate & flask db upgrade &
-
 CMD flask run -h 0.0.0.0 -p 10000
