@@ -28,8 +28,8 @@ RUN python3 -m pip install --upgrade pip \
 	opencv-python \
 	cloudinary \
 	insightface \
-	onnxruntime \
-	torch
+	torch \
+	onnxruntime
 
 COPY . .
 
