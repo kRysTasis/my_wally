@@ -79,7 +79,7 @@ def decode_np(text):
 
 
 def add_bboxes_to_image_top_three(ax, image: np.ndarray,
-                        bboxes: list[list[int, int, int, int]],
+                        bboxes: list[list[int]],
                         line_width: int = 2,
                         border_color=(0, 1, 0, 1)) -> None:
     """バウンディングボックス描画のためのaxを作成する関数
