@@ -155,8 +155,11 @@ def get_target_index(similarities):
 
 def get_faces(image):
     
+    print('インスタンス化')
     face_analysis = insightface.app.FaceAnalysis()
+    print('prepareする')
     face_analysis.prepare(ctx_id=0, det_size=(640, 640))
+    print('getする')
     faces = face_analysis.get(image)
     
     return {
