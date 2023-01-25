@@ -3,7 +3,7 @@ FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu20.04
 
 ENV PYTHONUNBUFFERED 1
 ENV TZ=Asia/Tokyo
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
