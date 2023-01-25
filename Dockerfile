@@ -1,9 +1,11 @@
 FROM python:3.9-buster
+# FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu20.04
 
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
+	# python3.9 \
 	net-tools \
 	sudo \
 	bzip2 \
@@ -17,6 +19,14 @@ RUN apt-get clean
 
 RUN python3 -m pip install --upgrade pip \
 &&  pip install --no-cache-dir \
+	black \
+    jupyterlab \
+    jupyterlab_code_formatter \
+    jupyterlab-git \
+    lckr-jupyterlab-variableinspector \
+    jupyterlab_widgets \
+    ipywidgets \
+    import-ipynb \
     flask \
 	line-bot-sdk \
 	requests \
@@ -27,9 +37,9 @@ RUN python3 -m pip install --upgrade pip \
 	Pillow \
 	opencv-python \
 	cloudinary \
-	insightface \
-	torch \
-	onnxruntime
+	torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu \
+	onnxruntime==1.13.1 \
+	insightface
 
 COPY . .
 
