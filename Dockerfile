@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-RUN apt-get update && apt-get install -y tzdata
+# RUN apt-get update && apt-get install -y tzdata
 # ENV TZ=Asia/Tokyo
 
 RUN apt-get update
@@ -42,8 +42,8 @@ RUN python3 -m pip install --upgrade pip \
 	Pillow \
 	opencv-python \	
 	cloudinary \
-	torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu \
-	onnxruntime==1.13.1 \
+	torch torchvision \
+	onnxruntime \
 	insightface
 
 COPY . .
