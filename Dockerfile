@@ -17,7 +17,8 @@ RUN apt-get install -y --no-install-recommends \
 	libgl1-mesa-dev \
     python3-dev \
     python3-pip \
-    python3-setuptools
+    python3-setuptools \
+	libopencv-dev
 RUN apt-get clean
 
 RUN python3 -m pip install --upgrade pip \
