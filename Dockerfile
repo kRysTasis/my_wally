@@ -2,6 +2,8 @@
 FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu20.04
 
 ENV PYTHONUNBUFFERED 1
+ENV TZ=Asia/Tokyo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
@@ -35,7 +37,7 @@ RUN python3 -m pip install --upgrade pip \
 	Flask-Migrate \
 	numpy \
 	Pillow \
-	opencv-python \
+	opencv-python \	
 	cloudinary \
 	torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu \
 	onnxruntime==1.13.1 \
