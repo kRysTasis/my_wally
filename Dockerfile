@@ -39,7 +39,9 @@ RUN python3 -m pip install --upgrade pip \
 	opencv-python \	
 	cloudinary
 
+
 COPY . .
+COPY requirements.txt ./
 RUN python3 -m pip install --requirement requirements.txt
 
 CMD flask run -h 0.0.0.0 -p 10000
