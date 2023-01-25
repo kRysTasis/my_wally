@@ -24,20 +24,22 @@ RUN apt-get clean
 RUN python3 -m pip install --upgrade pip \
 && pip install --no-cache-dir \
     flask \
-	Cython==0.29.24 \
-	mxnet==1.8.0 \
+	# Cython \
+	# mxnet \
 	# line-bot-sdk \
 	requests \
 	Flask-SQLAlchemy \
 	psycopg2-binary \
 	Flask-Migrate \
 	numpy \
-	onnxruntime-gpu==1.8.1 \
+	# onnxruntime-gpu \
 	Pillow \
 	pypandoc \
-	insightface==0.4 \
+	# insightface \
 	opencv-python \	
 	cloudinary
 
 COPY . .
+RUN python3 -m pip install --requirement requirements.txt
+
 CMD flask run -h 0.0.0.0 -p 10000
